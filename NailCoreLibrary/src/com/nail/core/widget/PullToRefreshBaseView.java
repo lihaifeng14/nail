@@ -1,12 +1,17 @@
 package com.nail.core.widget;
 
+import com.nail.core.R;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 public abstract class PullToRefreshBaseView<T extends View> extends LinearLayout {
 
@@ -17,14 +22,17 @@ public abstract class PullToRefreshBaseView<T extends View> extends LinearLayout
     public static final int STATE_MANUAL_REFRESHING = 4;
 
     private int mTouchSlop;
+    private float mInitialMotionX, mInitialMotionY;
     private float mLastMotionX, mLastMotionY;
 
     private boolean mIsBeingDragged = false;
     private T mInternalView;
+    private View mHeaderLayout;
 
     private int mState;
 
     protected abstract T createPullToRefreshView(Context context, AttributeSet attrs);
+    protected abstract boolean couldPullToRefresh();
 
     public PullToRefreshBaseView(Context context) {
         super(context);
@@ -47,7 +55,9 @@ public abstract class PullToRefreshBaseView<T extends View> extends LinearLayout
         mTouchSlop = config.getTouchSlop();
 
         mInternalView = createPullToRefreshView(context, attrs);
+        // 把Header和内容都加入到LinearLayout中
         addInternalView();
+        addHeaderView();
     }
 
     private void addInternalView() {
@@ -57,5 +67,82 @@ public abstract class PullToRefreshBaseView<T extends View> extends LinearLayout
         addView(mInternalView, param);
     }
 
-    
+    private void addHeaderView() {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        mHeaderLayout = inflater.inflate(R.layout.pulltorefresh_header_layout, null);
+        mHeaderLayout.setVisibility(View.GONE);
+        addView(mHeaderLayout, 0);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        final int action = ev.getAction();
+        if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL)) {
+            mIsBeingDragged = false;
+            return false;
+        }
+        if (action == MotionEvent.ACTION_MOVE && mIsBeingDragged) {
+            return true;
+        }
+
+        switch(action) {
+        case MotionEvent.ACTION_DOWN:
+            if (couldPullToRefresh()) {
+                mInitialMotionY = mLastMotionY = ev.getY();
+                mInitialMotionX = mLastMotionX = ev.getX();
+                mIsBeingDragged = false;
+            }
+            break;
+
+        case MotionEvent.ACTION_MOVE:
+            if (couldPullToRefresh()) {
+                float deltaY = mLastMotionY - ev.getY();
+                float deltaX = mLastMotionX - ev.getX();
+                if (!mIsBeingDragged && deltaY > mTouchSlop && Math.abs(deltaY) > Math.abs(deltaX)) {
+                    mLastMotionX = ev.getX();
+                    mLastMotionY = ev.getY();
+                    mIsBeingDragged = true;
+                }
+            }
+            break;
+        }
+        return mIsBeingDragged;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        final int action = ev.getAction();
+        switch(action) {
+        case MotionEvent.ACTION_DOWN:
+            if (couldPullToRefresh()) {
+                mInitialMotionY = mLastMotionY = ev.getY();
+                mIsBeingDragged = false;
+            }
+            break;
+        case MotionEvent.ACTION_MOVE:
+            if (couldPullToRefresh()) {
+                float deltaY = mLastMotionY - ev.getY();
+                float deltaX = mLastMotionX - ev.getX();
+                if (!mIsBeingDragged && deltaY > mTouchSlop && Math.abs(deltaY) > Math.abs(deltaX)) {
+                    mLastMotionX = ev.getX();
+                    mLastMotionY = ev.getY();
+                    mIsBeingDragged = true;
+                }
+                if (mIsBeingDragged) {
+                    mLastMotionX = ev.getX();
+                    mLastMotionY = ev.getY();
+                    doWithPullEvents();
+                }
+            }
+            break;
+        case MotionEvent.ACTION_UP:
+        case MotionEvent.ACTION_CANCEL:
+            break;
+        }
+        return true;
+    }
+
+    private void doWithPullEvents() {
+        
+    }
 }
