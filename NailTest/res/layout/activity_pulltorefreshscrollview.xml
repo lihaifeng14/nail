@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        <com.nail.core.widget.PullToRefreshScrollView
+            android:id="@+id/scroll_test"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+            <LinearLayout
+                android:id="@id/pulltorefresh_scroll_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+                <TextView
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:padding="8dp"
+		            android:text="@string/filler_text"
+		            android:textSize="16sp" />
+            </LinearLayout>
+        </com.nail.core.widget.PullToRefreshScrollView>
+    </LinearLayout>
+
+</RelativeLayout>
