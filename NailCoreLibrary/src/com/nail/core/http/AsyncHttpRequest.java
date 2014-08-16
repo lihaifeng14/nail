@@ -1,6 +1,8 @@
 package com.nail.core.http;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;

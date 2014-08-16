@@ -1,5 +1,9 @@
 package com.nail.core.http;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -10,6 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.http.NameValuePair;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
@@ -92,5 +97,29 @@ public class AsyncHttpHandler implements IHttpHandler {
             entry.getValue().cancel();
         }
         mRequestMap.clear();
+    }
+
+    @Override
+    public AsyncHttpRequest createRequest(int method, URI uri,
+            List<NameValuePair> params, Class<IBaseContent> cls,
+            IHttpResult result) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public AsyncHttpRequest createRequest(int method, URI uri,
+            List<NameValuePair> params, InputStream inputStream,
+            Class<IBaseContent> cls, IHttpResult result) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public AsyncHttpRequest createRequest(int method, URI uri,
+            List<NameValuePair> params, File file, Class<IBaseContent> cls,
+            IHttpResult result) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
