@@ -56,7 +56,6 @@ public class AsyncHttpHandler implements IHttpHandler {
 
         mHttpContext = new SyncBasicHttpContext(new BasicHttpContext());
 
-
         mRequestMap = new ConcurrentHashMap<Integer, AsyncHttpRequest>();
     }
 
@@ -71,6 +70,7 @@ public class AsyncHttpHandler implements IHttpHandler {
               mHttpClient.getCredentialsProvider());
     }
 
+    @Override
     public void setUserAgent(String userAgent) {
         HttpProtocolParams.setUserAgent(mHttpClient.getParams(), userAgent);
     }
@@ -100,26 +100,51 @@ public class AsyncHttpHandler implements IHttpHandler {
     }
 
     @Override
-    public AsyncHttpRequest createRequest(int method, URI uri,
-            List<NameValuePair> params, Class<IBaseContent> cls,
+    public AsyncHttpRequest creatGetRequest(URI uri, Class<? extends IBaseContent> cls,
             IHttpResult result) {
-        // TODO Auto-generated method stub
-        return null;
+        return HttpRequestFactory.createRequest(HTTP_GET, uri, cls, result);
     }
 
     @Override
-    public AsyncHttpRequest createRequest(int method, URI uri,
-            List<NameValuePair> params, InputStream inputStream,
-            Class<IBaseContent> cls, IHttpResult result) {
-        // TODO Auto-generated method stub
-        return null;
+    public AsyncHttpRequest creatDelRequest(URI uri, Class<? extends IBaseContent> cls,
+            IHttpResult result) {
+        return HttpRequestFactory.createRequest(HTTP_DELETE, uri, cls, result);
     }
 
     @Override
-    public AsyncHttpRequest createRequest(int method, URI uri,
-            List<NameValuePair> params, File file, Class<IBaseContent> cls,
+    public AsyncHttpRequest createPutRequest(URI uri,
+            List<NameValuePair> params, Class<? extends IBaseContent> cls,
             IHttpResult result) {
-        // TODO Auto-generated method stub
-        return null;
+        return HttpRequestFactory.createRequest(HTTP_PUT, uri, params, cls, result);
     }
+
+    @Override
+    public AsyncHttpRequest createPutRequest(URI uri, InputStream inputStream,
+            Class<? extends IBaseContent> cls, IHttpResult result) {
+        return HttpRequestFactory.createRequest(HTTP_PUT, uri, null, null, inputStream, cls, result);
+    }
+
+    @Override
+    public AsyncHttpRequest createPutRequest(URI uri, File file, Class<? extends IBaseContent> cls, IHttpResult result) {
+        return HttpRequestFactory.createRequest(HTTP_PUT, uri, null, null, file, cls, result);
+    }
+
+    @Override
+    public AsyncHttpRequest createPostRequest(URI uri,
+            List<NameValuePair> params, Class<? extends IBaseContent> cls, IHttpResult result) {
+        return HttpRequestFactory.createRequest(HTTP_POST, uri, params, cls, result);
+    }
+
+    @Override
+    public AsyncHttpRequest createPostRequest(URI uri, List<NameValuePair> params, String keyName,
+            InputStream inputStream, Class<? extends IBaseContent> cls, IHttpResult result) {
+        return HttpRequestFactory.createRequest(HTTP_POST, uri, params, keyName, inputStream, cls, result);
+    }
+
+    @Override
+    public AsyncHttpRequest createPostRequest(URI uri,
+            List<NameValuePair> params, String keyName, File file, Class<? extends IBaseContent> cls, IHttpResult result) {
+        return HttpRequestFactory.createRequest(HTTP_POST, uri, params, keyName, file, cls, result);
+    }
+
 }

@@ -37,6 +37,7 @@ public class AsyncHttpClient extends DefaultHttpClient{
 
     public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     public static final String ENCODING_GZIP = "gzip";
+    public static final String HEADER_USER_AGENT = "User-Agent";
 
     public static DefaultHttpClient createAsyncHttpClient() {
         BasicHttpParams httpParams = new BasicHttpParams();
@@ -56,13 +57,16 @@ public class AsyncHttpClient extends DefaultHttpClient{
 
         ThreadSafeClientConnManager cm = new ThreadSafeClientConnManager(httpParams, getDefaultSchemeRegistry());
 
-        DefaultHttpClient httpClient = new DefaultHttpClient(cm, httpParams);
+        final DefaultHttpClient httpClient = new DefaultHttpClient(cm, httpParams);
 
         httpClient.addRequestInterceptor(new HttpRequestInterceptor() {
             @Override
             public void process(HttpRequest request, HttpContext context) {
                 if (!request.containsHeader(HEADER_ACCEPT_ENCODING)) {
                     request.addHeader(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+                }
+                if (!request.containsHeader(HEADER_USER_AGENT)) {
+                    request.addHeader(HEADER_USER_AGENT, HttpProtocolParams.getUserAgent(httpClient.getParams()));
                 }
             }
         });
