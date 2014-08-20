@@ -44,13 +44,6 @@ public class ImageLoadAcitvity extends Activity {
         gridView.setAdapter(adapter);
     }
 
-    @Override
-    protected void onDestroy() {
-        mImageLoader.destory();
-        mImageLoader = null;
-        super.onDestroy();
-    }
-
     public class ImageAdapter extends BaseAdapter {
 
         @Override

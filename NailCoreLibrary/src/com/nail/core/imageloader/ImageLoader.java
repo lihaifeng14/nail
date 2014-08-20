@@ -147,8 +147,6 @@ public class ImageLoader {
         mWorkQueue.clear();
         mMemoryCache.evictAll();
         mSecondaryCache.clear();
-        mExecutor = null;
-        mDiskLruCache = null;
         mImageLoaderHandler.getLooper().quit();
     }
 
@@ -161,6 +159,10 @@ public class ImageLoader {
         public void handleMessage(Message msg) {
             switch(msg.what) {
             case MSG_REQUEST:
+                if (mWorkQueue.size() >= IMAGELOADER_WORK_QUEUE_MAX_COUNT || mImageStack.isEmpty()) {
+                    return;
+                }
+
                 ImageLoadInfo info = null;
                 try {
                     synchronized (mImageStack) {
@@ -174,16 +176,8 @@ public class ImageLoader {
                     return;
                 }
                 Log.d("lihaifeng", "pop from stack " + info.mUrl);
-
-                Bitmap bitmap = getFromDiskCache(info.mUrl);
-                if (bitmap != null) {
-                    mMemoryCache.put(info.mUrl, bitmap);
-                    showBitmapInThread(info.mImageView, bitmap, true, info.mCallback);
-                    sendLoadRequest();
-                } else {
-                    Log.d("lihaifeng", "mWorkQueue.size() " + mWorkQueue.size());
-                    mExecutor.execute(new ImageLoadRunnable(info));
-                }
+                Log.d("lihaifeng", "mWorkQueue.size() " + mWorkQueue.size());
+                mExecutor.execute(new ImageLoadRunnable(info));
                 break;
             }
         }
@@ -196,11 +190,19 @@ public class ImageLoader {
         Bitmap bitmap = getFromImageCache(url);
         if (bitmap != null) {
             setBitmapImage(imageView, bitmap, true, callback);
-        } else {
-            ImageLoadInfo info = new ImageLoadInfo(imageView, url, callback);
-            pushToStack(info);
-            sendLoadRequest();
+            return;
         }
+
+        bitmap = getFromDiskCache(url);
+        if (bitmap != null) {
+            mMemoryCache.put(url, bitmap);
+            setBitmapImage(imageView, bitmap, true, callback);
+            return;
+        }
+
+        ImageLoadInfo info = new ImageLoadInfo(imageView, url, callback);
+        pushToStack(info);
+        sendLoadRequest();
     }
 
     private void sendLoadRequest() {
