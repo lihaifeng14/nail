@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.methods.HttpUriRequest;
 
 public interface IHttpHandler {
 
@@ -35,6 +37,7 @@ public interface IHttpHandler {
 
     public void setUserAgent(String userAgent);
     public void sendRequest(AsyncHttpRequest request);
+    public HttpResponse excuteRequest(HttpUriRequest request);
     public void cancelRequest(int id);
     public void cancelRequests();
 }

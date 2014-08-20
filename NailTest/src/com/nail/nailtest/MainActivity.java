@@ -19,10 +19,11 @@ public class MainActivity extends Activity {
     ListView mListView;
     Handler mMainHandler;
 
-    public String mListNames[] = {"ListView", "ScrollView", "Http"};
+    public String mListNames[] = {"ListView", "ScrollView", "Http", "ImageLoad"};
     public Class<?> mListClass[] = {PullToRefreshListViewActivity.class, 
             PullToRefreshScrollViewAcitvity.class,
-            HttpTestActivity.class};
+            HttpTestActivity.class,
+            ImageLoadAcitvity.class};
     private TestAdapter mAdapter;
 
     @Override

@@ -1,6 +1,7 @@
 package com.nail.core.http;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
@@ -14,7 +15,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpProtocolParams;
@@ -145,6 +149,19 @@ public class AsyncHttpHandler implements IHttpHandler {
     public AsyncHttpRequest createPostRequest(URI uri,
             List<NameValuePair> params, String keyName, File file, Class<? extends IBaseContent> cls, IHttpResult result) {
         return HttpRequestFactory.createRequest(HTTP_POST, uri, params, keyName, file, cls, result);
+    }
+
+    @Override
+    public HttpResponse excuteRequest(HttpUriRequest request) {
+        HttpResponse response = null;
+        try {
+            response = mHttpClient.execute(request);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
 }
