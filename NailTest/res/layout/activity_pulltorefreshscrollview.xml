@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
-        <com.nail.core.widget.PullToRefreshScrollView
+        <com.nail.core.widget.pulltorefresh.PullToRefreshScrollView
             android:id="@+id/scroll_test"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -24,7 +24,7 @@
 		            android:text="@string/filler_text"
 		            android:textSize="16sp" />
             </LinearLayout>
-        </com.nail.core.widget.PullToRefreshScrollView>
+        </com.nail.core.widget.pulltorefresh.PullToRefreshScrollView>
     </LinearLayout>
 
 </RelativeLayout>

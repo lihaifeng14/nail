@@ -24,7 +24,7 @@ public class DiskLruCache {
     private Context mContext;
     private File mDirectory;
     private long mTotalSize;
-    private long mMaxCacheSize = 1024;
+    private long mMaxCacheSize = 50*1024*1024;
     private Map<String, CacheInfo> mLruEntries;
 
     public static DiskLruCache openCache(Context context, long maxCacheSize) {
@@ -74,6 +74,12 @@ public class DiskLruCache {
             return null;
         }
 
+        return file;
+    }
+
+    public synchronized File getFile(String url) {
+        String key = MD5Utils.getMD5(url);
+        File file = getCacheFile(key);
         return file;
     }
 

@@ -34,6 +34,8 @@
             android:name="com.nail.nailtest.HttpTestActivity" />
         <activity
             android:name="com.nail.nailtest.ImageLoadAcitvity" />
+        <activity
+            android:name="com.nail.nailtest.IndicatorActivity" />
     </application>
 
 </manifest>

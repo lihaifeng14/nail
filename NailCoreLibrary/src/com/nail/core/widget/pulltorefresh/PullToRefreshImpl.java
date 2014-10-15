@@ -1,6 +1,7 @@
-package com.nail.core.widget;
+package com.nail.core.widget.pulltorefresh;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,14 +9,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.View.MeasureSpec;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 
 import com.nail.core.R;
-import com.nail.core.widget.IPullToRefresh.RefreshListener;
+import com.nail.core.widget.pulltorefresh.IPullToRefresh.RefreshListener;
 
 public class PullToRefreshImpl {
 
@@ -49,10 +47,15 @@ public class PullToRefreshImpl {
     private RefreshListener mRefreshListener;
     private PullBehaviorListener mPullBehaviorListener;
 
+    private Handler mHandler;
+    private Interpolator mScrollInterpolator;
+    private SmoothScrollRunnable mSmoothScrollRunnable;
+
     public PullToRefreshImpl(Context context, AttributeSet attrs, PullBehaviorListener listener) {
         mPullBehaviorListener = listener;
         mContext = context;
 
+        mHandler = new Handler(mContext.getMainLooper());
         init(attrs);
     }
 
@@ -66,8 +69,7 @@ public class PullToRefreshImpl {
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         mPullRefreshLayout = (PullToRefreshHeader)inflater.inflate(R.layout.pulltorefresh_header, null);
-        measureView(mPullRefreshLayout);
-        mHeaderHeight = mPullRefreshLayout.getMeasuredHeight();
+        mHeaderHeight = mContext.getResources().getDimensionPixelSize(R.dimen.pulltorefresh_header_height);
         mPullRefreshLayout.switchState(STATE_INIT);
 
         mRefreshingLayout = (PullToRefreshHeader)inflater.inflate(R.layout.pulltorefresh_header, null);
@@ -79,6 +81,26 @@ public class PullToRefreshImpl {
 
     private void scrollHeader(int value) {
         mParentView.scrollTo(0, value);
+    }
+
+    private void smoothScrollHeader(int value) {
+        smoothScrollTo(mParentView, value, 500);
+    }
+
+    private final void smoothScrollTo(View view, int newScrollValue, long duration) {
+        if (null != mSmoothScrollRunnable) {
+            mSmoothScrollRunnable.stop();
+        }
+
+        final int oldScrollValue = view.getScrollY();
+        if (oldScrollValue != newScrollValue) {
+            if (null == mScrollInterpolator) {
+                mScrollInterpolator = new DecelerateInterpolator();
+            }
+            mSmoothScrollRunnable = new SmoothScrollRunnable(view, oldScrollValue, newScrollValue, duration);
+
+            mHandler.post(mSmoothScrollRunnable);
+        }
     }
 
     private boolean isRefreshing() {
@@ -178,7 +200,7 @@ public class PullToRefreshImpl {
                     mRefreshListener.onRefreshStarted();
                 } else {
                     if (isRefreshing()) {
-                        scrollHeader(0);
+                        smoothScrollHeader(0);
                     } else {
                         changeState(STATE_INIT);
                     }
@@ -214,7 +236,7 @@ public class PullToRefreshImpl {
         case STATE_INIT:
             mPullRefreshLayout.setVisibility(View.VISIBLE);
             mPullBehaviorListener.removePullHeaderView(mRefreshingLayout);
-            scrollHeader(0);
+            smoothScrollHeader(0);
             break;
         case STATE_PULL_TO_REFRESH:
             break;
@@ -223,29 +245,54 @@ public class PullToRefreshImpl {
         case STATE_PULL_REFRESHING:
         case STATE_MANUAL_REFRESHING:
             mPullRefreshLayout.setVisibility(View.INVISIBLE);
+            scrollHeader(mParentView.getScrollY()+mHeaderHeight);
             mPullBehaviorListener.addPullHeaderView(mRefreshingLayout);
-            scrollHeader(0);
+            smoothScrollHeader(0);
             break;
         }
     }
 
-    public static void measureView(View child) {
-        ViewGroup.LayoutParams p = child.getLayoutParams();
-        if (p == null) {
-            p = new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.FILL_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
+    private class SmoothScrollRunnable implements Runnable {
+
+        private View mView;
+        private int mFromValue;
+        private int mToValue;
+        private int mCurValue;
+        private long mDuration;
+        private long mStartTime;
+        private boolean mIsCancel;
+
+        public SmoothScrollRunnable(View view, int oldValue, int newValue, long duration) {
+            mView = view;
+            mFromValue = oldValue;
+            mToValue = newValue;
+            mIsCancel = false;
+            mStartTime = -1;
+            mCurValue = -1;
+            mDuration = duration;
         }
 
-        int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);
-        int childHeightSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.height);
+        public void stop() {
+            mIsCancel = true;
+        }
 
-        try {
-            child.measure(childWidthSpec, childHeightSpec);
-        } catch (Exception e) {
-            e.printStackTrace();
+        @Override
+        public void run() {
+            if (mStartTime == -1) {
+                mStartTime = System.currentTimeMillis();
+            } else {
+                long normalizedTime = (1000 * (System.currentTimeMillis() - mStartTime)) / mDuration;
+                normalizedTime = Math.max(Math.min(normalizedTime, 1000), 0);
+
+                final int deltaY = Math.round((mFromValue - mToValue)
+                        * mScrollInterpolator.getInterpolation(normalizedTime / 1000f));
+                mCurValue = mFromValue - deltaY;
+                mView.scrollTo(0, mCurValue);
+            }
+
+            if (!mIsCancel && mToValue != mCurValue) {
+                mHandler.postDelayed(this, 16);
+            }
         }
     }
-
-
 }

@@ -1,8 +1,8 @@
 package com.nail.nailtest;
 
-import com.nail.core.widget.IPullToLoad.LoadListener;
-import com.nail.core.widget.IPullToRefresh.RefreshListener;
-import com.nail.core.widget.PullToRefreshListView;
+import com.nail.core.widget.pulltorefresh.IPullToLoad.LoadListener;
+import com.nail.core.widget.pulltorefresh.IPullToRefresh.RefreshListener;
+import com.nail.core.widget.pulltorefresh.PullToRefreshListView;
 
 import android.os.Bundle;
 import android.os.Handler;

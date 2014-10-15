@@ -1,7 +1,7 @@
 package com.nail.nailtest;
 
-import com.nail.core.widget.IPullToRefresh.RefreshListener;
-import com.nail.core.widget.PullToRefreshScrollView;
+import com.nail.core.widget.pulltorefresh.IPullToRefresh.RefreshListener;
+import com.nail.core.widget.pulltorefresh.PullToRefreshScrollView;
 
 import android.os.Bundle;
 import android.os.Handler;

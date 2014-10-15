@@ -1,4 +1,4 @@
-package com.nail.core.widget;
+package com.nail.core.widget.pulltorefresh;
 
 public interface IPullToLoad {
 

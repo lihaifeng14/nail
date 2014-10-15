@@ -80,7 +80,11 @@ public class ImageLoader {
     }
 
     public interface BitmapLoadCallback {
-        public void loadFinished(ImageView imageView, Bitmap bitmap);
+        public void onLoadFinished(ImageView imageView, Bitmap bitmap);
+    }
+
+    public interface BitmapDownLoadCallback {
+        public void onDownLoadComplete(String tag, String url);
     }
 
     public ImageLoader(Context context) {
@@ -183,6 +187,22 @@ public class ImageLoader {
         }
     }
 
+    public void downloadImage(String url, String tag, BitmapDownLoadCallback callback) {
+        Bitmap bitmap = getFromDiskCache(url);
+        if (bitmap != null) {
+            callback.onDownLoadComplete(tag, url);
+            return;
+        }
+
+        ImageLoadInfo info = new ImageLoadInfo(tag, url, callback);
+        pushToStack(info);
+        sendLoadRequest();
+    }
+
+    public File getImageFile(String url) {
+        return mDiskLruCache.getFile(url);
+    }
+
     public void displayImage(String url, ImageView imageView, int defaultResId, BitmapLoadCallback callback) {
         if (defaultResId > 0) {
             imageView.setImageResource(defaultResId);
@@ -234,9 +254,18 @@ public class ImageLoader {
         });
     }
 
+    private void completeDownload(final String tag, final String url, final BitmapDownLoadCallback callback) {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                callback.onDownLoadComplete(tag, url);
+            }
+        });
+    }
+
     private void setBitmapImage(ImageView imageView, Bitmap bitmap, boolean showAnim, BitmapLoadCallback callback) {
         if (callback != null) {
-            callback.loadFinished(imageView, bitmap);
+            callback.onLoadFinished(imageView, bitmap);
             imageView.setImageBitmap(bitmap);
             return;
         }
@@ -297,24 +326,39 @@ public class ImageLoader {
             return null;
         }
 
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inSampleSize = 1;
-        opt.inInputShareable = true;
-        opt.inPurgeable = true;
-        opt.inJustDecodeBounds = true;
+//        BitmapFactory.Options opt = new BitmapFactory.Options();
+//        opt.inSampleSize = 1;
+//        opt.inInputShareable = true;
+//        opt.inPurgeable = true;
+//        opt.inJustDecodeBounds = true;
 
-        return BitmapFactory.decodeFile(file.getAbsolutePath(), opt);
+        return BitmapFactory.decodeFile(file.getAbsolutePath(), null);
     }
 
     public static class ImageLoadInfo {
+        public static int IMAGELOAD_TYPE_IMAGEVIEW = 0;
+        public static int IMAGELOAD_TYPE_DOWNLOAD = 1;
+
+        public int mImageLoadType;
         public ImageView mImageView;
         public String mUrl;
         public BitmapLoadCallback mCallback;
+        public String mTag;
+        public BitmapDownLoadCallback mCallback1;
+
 
         public ImageLoadInfo(ImageView imageView, String url, BitmapLoadCallback callback) {
+            mImageLoadType = IMAGELOAD_TYPE_IMAGEVIEW;
             mImageView = imageView;
             mUrl = url;
             mCallback = callback;
+        }
+
+        public ImageLoadInfo(String tag, String url, BitmapDownLoadCallback callback) {
+            mImageLoadType = IMAGELOAD_TYPE_DOWNLOAD;
+            mTag = tag;
+            mUrl = url;
+            mCallback1 = callback;
         }
     }
 
@@ -337,6 +381,7 @@ public class ImageLoader {
             } catch (java.net.UnknownHostException e) {
             } catch (java.net.SocketTimeoutException e) {
             } catch (Exception e) {
+                e.printStackTrace();
             } 
             return null;
         }
@@ -367,9 +412,14 @@ public class ImageLoader {
 
             if (bitmap != null) {
                 putToDiskCache(mImageLoadInfo.mUrl, bitmap);
-                mMemoryCache.put(mImageLoadInfo.mUrl, bitmap);
-                Log.e("lihaifeng", "ImageLoadRunnable finish ImageView " + mImageLoadInfo.mImageView + " " + mImageLoadInfo.mUrl);
-                showBitmapInThread(mImageLoadInfo.mImageView, bitmap, true, mImageLoadInfo.mCallback);
+                if (mImageLoadInfo.mImageLoadType == ImageLoadInfo.IMAGELOAD_TYPE_IMAGEVIEW) {
+                    mMemoryCache.put(mImageLoadInfo.mUrl, bitmap);
+                    Log.e("lihaifeng", "ImageLoadRunnable finish ImageView " + mImageLoadInfo.mImageView + " " + mImageLoadInfo.mUrl);
+                    showBitmapInThread(mImageLoadInfo.mImageView, bitmap, true, mImageLoadInfo.mCallback);
+                } else {
+                    completeDownload(mImageLoadInfo.mTag, mImageLoadInfo.mUrl, mImageLoadInfo.mCallback1);
+                }
+
                 sendLoadRequest();
             }
         }

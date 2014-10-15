@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width" />
+<meta name="format-detection" content="telephone=no">
+<style type="text/css">
+body,h1,h2,h3,h4,h5,h6,dl,dt,dd,ul,ol,li,th,td,p,blockquote,pre,form,fieldset,legend,input,button,textarea,article,aside,footer,header,hgroup,nav,section,menu{margin:0; padding:0;-webkit-text-size-adjust:100%;font-family:XinGothic-SinaWeibo-Regular;}
+body{-webkit-transform:translate3d(0,0,0);font-size:62.5%;line-height:1; background:#fafafa;}
+table{border-collapse:collapse;border-spacing:0;}
+em,i{font-style:normal;}
+li{list-style:none;}
+img{border:0;}
+a{text-decoration:none;}
+article,aside,footer,header,hgroup,nav,section,menu{display:block;}
+.cont img:first-child { margin-top:0;}
+.cont *:first-child{margin-top:0;}
+.b-content{color:#333;overflow:hidden;}
+.b-content .title{font-size:2.3em;line-height:1.9375rem;margin:2.6875rem 1.25rem 1.875rem;font-weight:700;text-align:center;color:#000;}
+.b-content .cont{font-size:1.8em;line-height:1.5em;overflow:hidden; word-break:break-all; word-wrap:break-word;}
+.b-content .cont p{margin-bottom:1.25rem;padding:0 1.25rem;text-align: justify;text-justify: inter-ideograph;}
+.b-content .cont br{line-height:2.4rem;}
+.b-content img{max-width:100%;display:block;margin:1.875rem auto;}
+.b-content img+img{ margin-top:-.9375rem;}
+.b-content img[type="face"]{display:inline-block;vertical-align:-.3rem;margin:0 .2rem;padding:0;}
+.b-content img[type="face"]+img[type="face"]{ margin-top:0;}
+.b-content video{display:block;margin:1.875rem auto;}
+
+/*小--默认字号*/
+.bl-small .cont{font-size:1.8em;}
+/*中*/
+.bl-middle .cont{font-size:1.25rem;}
+/*大*/
+.bl-large .cont{font-size:1.625rem;}
+/*夜间模式*/
+.bl-night{background:#1f1f1f;}
+.bl-night .title{color:#808080;}
+.bl-night .cont{color:#737373;}
+.bl-night img{opacity:.6;}
+</style>
+</head>
+
+<body>
+<article id="article" class="b-content bl-small">
+  <h1 class="title" id="title" style="font-weight:400">
+    <!--title-start-->
+    <!--title-end--></h1> 
+   <div class="cont" id="content" style="line-height:1.56em"> 
+    <!--cont-start-->
+    <!--cont-end--> 
+   </div> 
+</article>
+
+<script type="text/javascript">
+var elArticle = document.getElementById('article');
+function hasClass(obj, cls) {
+	return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));  
+}
+function addClass(obj, cls) {
+	if (!hasClass(obj, cls)) obj.className += " " + cls;
+}
+function removeClass(obj, cls) {
+	if (hasClass(obj, cls)) {
+		var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+		obj.className = obj.className.replace(reg, ' ');
+	}
+}
+function toggleClass(obj, cls){
+	if(hasClass(obj,cls)){
+		removeClass(obj, cls);
+	}else{
+		addClass(obj, cls);
+	}
+}
+function changeFont(type) {
+	if(type === 1) {
+		removeClass(elArticle, 'bl-middle');
+	    removeClass(elArticle, 'bl-large');
+		addClass(elArticle, 'bl-small');
+	}else if(type === 2) {
+		removeClass(elArticle, 'bl-small');
+   		removeClass(elArticle, 'bl-large');
+		addClass(elArticle, 'bl-middle');
+	}else if(type === 3) {
+		removeClass(elArticle, 'bl-small');
+	    removeClass(elArticle, 'bl-middle');
+		addClass(elArticle, 'bl-large');
+	}else {
+		removeClass(elArticle, 'bl-middle');
+	    removeClass(elArticle, 'bl-large');
+		addClass(elArticle, 'bl-small');
+	}
+}
+function changeNight(type) {
+	if(type === 1) {
+		removeClass(elArticle, 'bl-night');
+	}else if(type === 2) {
+		addClass(elArticle, 'bl-night');
+	}else {
+		removeClass(elArticle, 'bl-night');
+	}
+}
+</script>
+
+</body>
+</html>
