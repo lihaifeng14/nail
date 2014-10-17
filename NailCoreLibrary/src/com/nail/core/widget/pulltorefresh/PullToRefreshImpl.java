@@ -144,7 +144,8 @@ public class PullToRefreshImpl {
 
         switch(action) {
         case MotionEvent.ACTION_DOWN:
-            if (mPullBehaviorListener.couldPullToRefresh()) {
+            if (mPullBehaviorListener.couldPullToRefresh() &&
+                    (mRefreshListener != null && mRefreshListener.couldDoPullRefresh())) {
                 mInitialMotionY = mLastMotionY = ev.getY();
                 mInitialMotionX = mLastMotionX = ev.getX();
                 mIsBeingDragged = false;
@@ -152,7 +153,8 @@ public class PullToRefreshImpl {
             break;
 
         case MotionEvent.ACTION_MOVE:
-            if (mPullBehaviorListener.couldPullToRefresh()) {
+            if (mPullBehaviorListener.couldPullToRefresh() &&
+                    (mRefreshListener != null && mRefreshListener.couldDoPullRefresh())) {
                 float deltaY = ev.getY()-mLastMotionY;
                 float deltaX = ev.getX()-mLastMotionX;
                 if (!mIsBeingDragged && deltaY > mTouchSlop && Math.abs(deltaY) > Math.abs(deltaX)) {
@@ -171,14 +173,16 @@ public class PullToRefreshImpl {
 
         switch(action) {
         case MotionEvent.ACTION_DOWN:
-            if (mPullBehaviorListener.couldPullToRefresh()) {
+            if (mPullBehaviorListener.couldPullToRefresh() &&
+                    (mRefreshListener != null && mRefreshListener.couldDoPullRefresh())) {
                 mInitialMotionY = mLastMotionY = ev.getY();
                 mInitialMotionX = mLastMotionX = ev.getX();
                 mIsBeingDragged = false;
             }
             break;
         case MotionEvent.ACTION_MOVE:
-            if (mPullBehaviorListener.couldPullToRefresh()) {
+            if (mPullBehaviorListener.couldPullToRefresh() &&
+                    (mRefreshListener != null && mRefreshListener.couldDoPullRefresh())) {
                 float deltaY = ev.getY()-mLastMotionY;
                 float deltaX = ev.getX()-mLastMotionX;
                 if (!mIsBeingDragged && deltaY > mTouchSlop && Math.abs(deltaY) > Math.abs(deltaX)) {

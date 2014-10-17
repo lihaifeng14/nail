@@ -4,6 +4,7 @@ import com.nail.core.R;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -35,19 +36,28 @@ public class PullToRefreshHeader extends RelativeLayout{
     }
 
     public void switchState(int state) {
+        mImage.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.GONE);
         switch(state) {
         case PullToRefreshImpl.STATE_INIT:
-            mTextInfo.setText("Pull to refresh");
+            mImage.setVisibility(View.VISIBLE);
+            mImage.setImageResource(R.drawable.pull_to_refresh);
+            mTextInfo.setText(R.string.refreshing);
             break;
         case PullToRefreshImpl.STATE_PULL_TO_REFRESH:
-            mTextInfo.setText("Pull to refresh");
+            mImage.setVisibility(View.VISIBLE);
+            mImage.setImageResource(R.drawable.pull_to_refresh);
+            mTextInfo.setText(R.string.pull_to_refresh);
             break;
         case PullToRefreshImpl.STATE_RELEASE_TO_REFRESH:
-            mTextInfo.setText("Release to refresh");
+            mImage.setVisibility(View.VISIBLE);
+            mImage.setImageResource(R.drawable.release_to_fresh);
+            mTextInfo.setText(R.string.release_to_refresh);
             break;
         case PullToRefreshImpl.STATE_PULL_REFRESHING:
         case PullToRefreshImpl.STATE_MANUAL_REFRESHING:
-            mTextInfo.setText("Refreshing");
+            mProgressBar.setVisibility(View.VISIBLE);
+            mTextInfo.setText(R.string.refreshing);
             break;
         }
     }

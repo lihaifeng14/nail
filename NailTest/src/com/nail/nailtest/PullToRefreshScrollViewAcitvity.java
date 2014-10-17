@@ -32,7 +32,8 @@ public class PullToRefreshScrollViewAcitvity extends Activity {
                 }, 2000);
             }
             @Override
-            public void couldDoPullRefresh() {
+            public boolean couldDoPullRefresh() {
+                return true;
             }
         });
     }

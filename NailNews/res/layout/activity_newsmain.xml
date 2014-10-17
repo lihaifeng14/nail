@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.nail.news.widget.NewsHeaderTitle
+        android:id="@+id/news_main_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/news_titlebar_height" />
+
+    <com.nail.core.widget.pageindicator.TabPageIndicator 
+        android:id="@+id/news_main_tabindicator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/news_titlebar_height" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/news_main_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

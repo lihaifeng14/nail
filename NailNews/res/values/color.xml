@@ -1,0 +1,11 @@
+<resources>
+    <color name="title_background">#ff3131cc</color>
+    <color name="item_select_background">#fff1f1f1</color>
+    <color name="activity_background">#fff5f5f5</color>
+    <color name="item_divider">#ffdddddd</color>
+    <color name="item_title_normal">#ff444444</color>
+    <color name="item_title_disabled">#ff888888</color>
+    <color name="item_secondary">#ff999999</color>
+    <color name="item_picture_title">#ffeeeeee</color>
+
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true"><shape>
+            <solid android:color="@color/item_select_background" />
+        </shape></item>
+    <item><shape>
+            <solid android:color="@color/activity_background" />
+        </shape></item>
+
+</selector>

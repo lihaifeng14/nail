@@ -1,5 +1,6 @@
 package com.nail.core.http;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
@@ -26,6 +27,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.nail.core.utils.CommonUtils;
 
 import android.text.TextUtils;
 
@@ -45,6 +47,10 @@ public class AsyncHttpRequest extends PriorityRunnable {
     private boolean mIsCancelled = false;
     private int mRequestId = 0;
 
+    private boolean mAdjustContent;
+    private boolean mSaveJsonFile;
+    private File mJsonFile;
+
     public AsyncHttpRequest(int method, int requestId, List<NameValuePair> params, 
             HttpUriRequest request, Class<? extends IBaseContent> cls, IHttpResult result) {
         mMethod = method;
@@ -53,6 +59,17 @@ public class AsyncHttpRequest extends PriorityRunnable {
         mHttpUriRequest = request;
         mContentCls = cls;
         mHttpResult = result;
+        mAdjustContent = false;
+        mJsonFile = null;
+    }
+
+    public void setAdjustContent() {
+        mAdjustContent = true;
+    }
+
+    public void setSaveJsonFile(File file) {
+        mJsonFile = file;
+        mSaveJsonFile = true;
     }
 
     public void setClient(HttpClient client, HttpContext context) {
@@ -107,7 +124,14 @@ public class AsyncHttpRequest extends PriorityRunnable {
                 HttpEntity entity = response.getEntity();
                 Header contentType = entity.getContentType();
                 String charset = getCharset(contentType.toString());
-                String content =  EntityUtils.toString(entity, charset);
+                String content = EntityUtils.toString(entity, charset);
+                if (mAdjustContent) {
+                    content = "{\"data\":" + content.replaceAll("\\\\/", "/") + "}";
+                }
+
+                if (mSaveJsonFile && mJsonFile != null) {
+                    CommonUtils.writeStringToFile(mJsonFile, content, false);
+                }
 
                 IBaseContent result = null;
                 JSONObject json = JSON.parseObject(content);

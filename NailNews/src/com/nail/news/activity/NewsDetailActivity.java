@@ -17,6 +17,10 @@ import org.jsoup.select.Elements;
 
 import com.nail.core.imageloader.ImageLoader;
 import com.nail.news.R;
+import com.nail.news.data.NewsDetailData;
+import com.nail.news.data.NewsItemData;
+import com.nail.news.data.NewsItemData.ImageData;
+import com.nail.news.manager.NewsDetailManager;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,15 +35,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-public class NewsDetailActivity extends Activity implements ImageLoader.BitmapDownLoadCallback{
+public class NewsDetailActivity extends Activity 
+        implements ImageLoader.BitmapDownLoadCallback, NewsDetailManager.NewDetailCallback{
 
     public static final String IMG_LOCAL_SRC = "file:///android_asset/image/image_default.png";
+
+    public static final String EXTRA_DOCUMENT_ID = "extra_document_id";
+
+    private NewsDetailManager mManager;
+    private String mDocumentId;
 
     private WebView mWebView;
     private WebSettings mWebSettings;
     private ImageLoader mImageLoader;
 
     private List<String> mListImageUrls;
+    private List<String> mListBigImageUrls;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +58,7 @@ public class NewsDetailActivity extends Activity implements ImageLoader.BitmapDo
         setContentView(R.layout.activity_newsdetail);
 
         mImageLoader = ImageLoader.getInstance(getApplicationContext());
+        mManager = NewsDetailManager.getInstance();
 
         mWebView = (WebView)findViewById(R.id.newsdetail_web);
 
@@ -56,8 +68,8 @@ public class NewsDetailActivity extends Activity implements ImageLoader.BitmapDo
 
         mListImageUrls = new ArrayList<String>();
 
-        HtmlParserTask task = new HtmlParserTask(mWebView, this, "测试测试", "你好");
-        task.execute();
+//        HtmlParserTask task = new HtmlParserTask(mWebView, this, "测试测试", "你好");
+//        task.execute();
 
         mWebView.setWebViewClient(new WebViewClient(){
             @Override
@@ -74,6 +86,8 @@ public class NewsDetailActivity extends Activity implements ImageLoader.BitmapDo
                 }
             }
         });
+        mDocumentId = getIntent().getStringExtra(EXTRA_DOCUMENT_ID);
+        mManager.getDetailData(mDocumentId, this);
     }
 
     class HtmlParserTask extends AsyncTask<Void, Void, String> {
@@ -98,13 +112,13 @@ public class NewsDetailActivity extends Activity implements ImageLoader.BitmapDo
 
             String html;
             try {
-                InputStream inputStream = getResources().openRawResource(R.raw.content);
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                byte[] buf= new byte[4096]; 
-                int bytes = 0;
-                while ((bytes = inputStream.read(buf)) != -1) { 
-                    bos.write(buf, 0, bytes);
-                }
+//                InputStream inputStream = getResources().openRawResource(R.raw.content);
+//                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//                byte[] buf= new byte[4096]; 
+//                int bytes = 0;
+//                while ((bytes = inputStream.read(buf)) != -1) { 
+//                    bos.write(buf, 0, bytes);
+//                }
 
                 html = readHtmlTemplateFile();
                 long t1 = System.currentTimeMillis();
@@ -117,8 +131,8 @@ public class NewsDetailActivity extends Activity implements ImageLoader.BitmapDo
                 element.html(mTitle);
                 // 替换body
                 element = doc.getElementById("content");
-                String body = bos.toString();
-                element.html(body);
+//                String body = bos.toString();
+                element.html(mContent);
 
                 // 替换正文后重新解析
                 doc = Jsoup.parse(doc.html());
@@ -151,30 +165,36 @@ public class NewsDetailActivity extends Activity implements ImageLoader.BitmapDo
     private void handleImageClickEvent(Document doc) throws IOException {
         Elements es = doc.getElementsByTag("img");
         int size = es.size();
+        boolean couldReplace = mListBigImageUrls != null && mListBigImageUrls.size() == size;
 
         File imgFile;
         String localImgPath;
         for (int i = 0; i < size; i++ ) {
             Element e = es.get(i);
-            String type = e.attr("type");
-            if(type.equals("image")) {
+//            String type = e.attr("type");
+//            if(type.equals("image")) {
                 //取得图片的真实地址
-                String imgUrl = e.attr("name"); 
+                String imgUrl = e.attr("src"); 
                 if(imgUrl.startsWith("file")) {     // 来自assets文件夹的图片,如视频背景图
                     e.attr("src",imgUrl);
                     e.attr("ori_link",imgUrl);
                 } else {
                     e.attr("id", "img_" + mListImageUrls.size());
+                    // 替换img url
+                    if (couldReplace) {
+                        imgUrl = mListBigImageUrls.get(mListImageUrls.size());
+                        e.attr("width", "500");
+                    }
                     mListImageUrls.add(imgUrl);
                     e.attr("src", IMG_LOCAL_SRC);
-                    e.attr("ori_link",imgUrl);
+                    e.attr("ori_link", imgUrl);
 
                     // 图片点击 跳新的页面 
 //                            String click = "window." + JAVASCRIPT_NAME + ".showImageInActivity('"
 //                                    + index + "')";
 //                            e.attr("onclick", click);
                 }
-            }
+//            }
         }
     }
 
@@ -223,13 +243,32 @@ public class NewsDetailActivity extends Activity implements ImageLoader.BitmapDo
         File file = mImageLoader.getImageFile(url);
         String js = "javascript:(function(){" +
                 "var imgEle = document.getElementById(\"img_" + tag + "\"); " + 
-                "if(imgEle.getAttribute(\"type\")==\"image\") {" +
-                "   var imgOriUrl = imgEle.getAttribute(\"ori_link\"); " +  //真实地址
-                "   if(imgOriUrl == \"" + url + "\") {" +
-                "       imgEle.setAttribute(\"src\", \"" + Uri.fromFile(file).toString() + "\");" +
-                "   }" +
+                "var imgOriUrl = imgEle.getAttribute(\"ori_link\"); " +  //真实地址
+                "if(imgOriUrl == \"" + url + "\") {" +
+                "   imgEle.setAttribute(\"src\", \"" + Uri.fromFile(file).toString() + "\");" +
                 "}" +
                 "})()";
         mWebView.loadUrl(js); 
+    }
+
+    @Override
+    public void onDetailCallback(NewsDetailData data) {
+        NewsItemData item = data.getData().getBody();
+        String title = item.getTitle();
+        String content = item.getText();
+        List<ImageData> imgs = item.getImg();
+        if (imgs != null) {
+            mListBigImageUrls = new ArrayList<String>();
+            for (ImageData img : imgs) {
+                mListBigImageUrls.add(img.getUrl());
+            }
+        }
+
+        HtmlParserTask task = new HtmlParserTask(mWebView, this, title, content);
+        task.execute();
+    }
+
+    @Override
+    public void onDetailFailed() {
     }
 }

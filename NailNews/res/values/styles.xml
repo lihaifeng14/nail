@@ -14,7 +14,21 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="item_title">
+        <item name="android:textSize">17.0sp</item>
+        <item name="android:textColor">@color/selector_item_title</item>
+    </style>
+
+    <style name="item_secondary_text">
+        <item name="android:textSize">11.0sp</item>
+        <item name="android:textColor">@color/item_secondary</item>
+    </style>
+
+    <style name="item_picture_text">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/item_picture_title</item>
+    </style>
 </resources>

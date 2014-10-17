@@ -6,10 +6,12 @@
         android:id="@+id/pulltorefresh_header_frame"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_marginLeft="20dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp">
         <ImageView
             android:id="@+id/pulltofresh_header_image"
+            android:scaleType="centerInside"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <ProgressBar
@@ -22,6 +24,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Refresh..."
-        android:textSize="20dp"/>
+        android:textSize="15dp"/>
 </com.nail.core.widget.pulltorefresh.PullToRefreshHeader>

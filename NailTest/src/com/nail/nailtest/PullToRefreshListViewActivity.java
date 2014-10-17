@@ -44,7 +44,8 @@ public class PullToRefreshListViewActivity extends Activity {
                 }, 4000);
             }
             @Override
-            public void couldDoPullRefresh() {
+            public boolean couldDoPullRefresh() {
+                return true;
             }
         });
         mListView.setLoadListener(new LoadListener() {

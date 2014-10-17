@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -46,7 +46,7 @@ public class AsyncHttpHandler implements IHttpHandler {
         mHttpClient = AsyncHttpClient.createAsyncHttpClient();
 
         mThreadPool = new ThreadPoolExecutor(THREAD_DEF_WORDER_COUNT, THREAD_MAX_WORKER_COUNT, 
-                THREAD_KEEP_ALIVE_TIME, TimeUnit.SECONDS, new PriorityBlockingQueue<Runnable>(WORK_QUEUE_MAX_COUNT),
+                THREAD_KEEP_ALIVE_TIME, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(WORK_QUEUE_MAX_COUNT),
                 new ThreadFactory() {
                     private final AtomicInteger mThreadCount = new AtomicInteger(1);
                     public Thread newThread(Runnable r) {
