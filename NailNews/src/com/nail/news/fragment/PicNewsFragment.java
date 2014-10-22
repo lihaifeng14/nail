@@ -77,6 +77,7 @@ public class PicNewsFragment extends BaseFragment implements PageContent.NewsDat
 
         mAdapter = new NewsFragmentAdapter(mActivity);
         mListView.setAdapter(mAdapter);
+        mAdapter.setParentView((ViewGroup)view);
 
         mManager.loadDefaultData(mType);
  

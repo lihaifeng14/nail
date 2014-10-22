@@ -3,9 +3,11 @@ package com.nail.news.adapter;
 import com.nail.core.imageloader.ImageLoader;
 import com.nail.news.R;
 import com.nail.news.activity.NewsDetailActivity;
+import com.nail.news.activity.PicturesActivity;
 import com.nail.news.data.NewsItemData;
 import com.nail.news.data.PageContent;
 import com.nail.news.widget.NewsPicItemGallery;
+import com.nail.news.widget.PictureIndicator;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +23,7 @@ public class NewsFragmentAdapter extends BaseAdapter implements View.OnClickList
 
     private PageContent mContent;
     private Context mContext;
+    private ViewGroup mParentView;
 
     public NewsFragmentAdapter(Context context) {
         mContext = context;
@@ -28,6 +31,10 @@ public class NewsFragmentAdapter extends BaseAdapter implements View.OnClickList
 
     public void setContent(PageContent content) {
         mContent = content;
+    }
+
+    public void setParentView(ViewGroup parent) {
+        mParentView = parent;
     }
 
     @Override
@@ -60,7 +67,7 @@ public class NewsFragmentAdapter extends BaseAdapter implements View.OnClickList
                 ViewHolder1 holder = new ViewHolder1();
                 holder.pic_gallery = (NewsPicItemGallery)convertView.findViewById(R.id.item_picture_gallery);
                 holder.text_title = (TextView)convertView.findViewById(R.id.item_picture_title);
-                holder.text_num = (TextView)convertView.findViewById(R.id.item_picture_num);
+                holder.text_num = (PictureIndicator)convertView.findViewById(R.id.item_picture_num);
                 convertView.setTag(holder);
             }
 
@@ -68,7 +75,15 @@ public class NewsFragmentAdapter extends BaseAdapter implements View.OnClickList
             NewsPictureGalleryAdapter adapter = new NewsPictureGalleryAdapter();
             adapter.mTextTitle = holder.text_title;
             adapter.mTextNum = holder.text_num;
+            if (adapter.getCount() <= 1) {
+                holder.text_num.setVisibility(View.GONE);
+                holder.text_num.setSize(0);
+            } else {
+                holder.text_num.setVisibility(View.VISIBLE);
+                holder.text_num.setSize(adapter.getCount());
+            }
             holder.pic_gallery.setAdapter(adapter);
+            holder.pic_gallery.setParentView(mParentView);
             holder.pic_gallery.setSelection(0);
             holder.pic_gallery.setOnItemClickListener(adapter);
             holder.pic_gallery.setOnItemSelectedListener(adapter);
@@ -126,7 +141,7 @@ public class NewsFragmentAdapter extends BaseAdapter implements View.OnClickList
     static class ViewHolder1 {
         NewsPicItemGallery pic_gallery;
         TextView text_title;
-        TextView text_num;
+        PictureIndicator text_num;
     }
 
     @Override
@@ -147,7 +162,7 @@ public class NewsFragmentAdapter extends BaseAdapter implements View.OnClickList
             implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
 
         public TextView mTextTitle;
-        public TextView mTextNum;
+        public PictureIndicator mTextNum;
 
         @Override
         public int getCount() {
@@ -187,7 +202,7 @@ public class NewsFragmentAdapter extends BaseAdapter implements View.OnClickList
                 int count = mContent.mFocusData.getBody().getItem().size();
                 NewsItemData data = mContent.mFocusData.getBody().getItem().get(position);
                 mTextTitle.setText(data.getTitle());
-                mTextNum.setText(String.valueOf(position+1) + "/" + count);
+                mTextNum.setCheck(position);
             }
         }
 
@@ -196,8 +211,15 @@ public class NewsFragmentAdapter extends BaseAdapter implements View.OnClickList
         }
 
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                long id) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (mContent != null && mContent.mFocusData != null) {
+                int count = mContent.mFocusData.getBody().getItem().size();
+                NewsItemData data = mContent.mFocusData.getBody().getItem().get(position);
+                Intent intent = new Intent(mContext, PicturesActivity.class);
+                intent.putExtra(NewsDetailActivity.EXTRA_DOCUMENT_ID, data.getDocumentId());
+                intent.putExtra(NewsDetailActivity.EXTRA_COMMENTS_COUNT, data.getComments());
+                mContext.startActivity(intent);
+            }
         }
     }
 }

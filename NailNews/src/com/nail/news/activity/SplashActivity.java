@@ -40,7 +40,7 @@ public class SplashActivity extends Activity implements SplashCallback{
                 startActivity(new Intent(SplashActivity.this, NewsMainActivity.class));
                 finish();
             }
-        }, 6000);
+        }, 4000);
 
         mAnimation = AnimationUtils.loadAnimation(this, R.anim.splash_fade_in);
     }

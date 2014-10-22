@@ -1,7 +1,5 @@
 package com.nail.news.adapter;
 
-import java.util.ArrayList;
-
 import com.nail.news.R;
 import com.nail.news.data.CommentsContent;
 import com.nail.news.data.CommentsDetailData;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class CommentsAdapter extends BaseAdapter implements
@@ -167,6 +164,7 @@ public class CommentsAdapter extends BaseAdapter implements
 
     private ViewGroup addCommentExpandData(ViewGroup parent,
             CommentsDetailData data) {
+
         ViewGroup floorView = (ViewGroup) LayoutInflater.from(mContext)
                 .inflate(R.layout.comments_floor, null);
         View commentView = floorView.findViewById(R.id.floor_comments);

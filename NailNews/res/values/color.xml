@@ -21,5 +21,6 @@
     <color name="item_comments_expand">#ff888888</color>
     <color name="comments_floor_line">#ffeaead6</color>
     <color name="comments_floor_background">#fff8f8f1</color>
-
+    <color name="pictures_background">#ff000000</color>
+    <color name="transparent_background">#00000000</color>
 </resources>

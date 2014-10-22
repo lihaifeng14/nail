@@ -1,37 +1,41 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:minHeight="@dimen/news_item_pictures_height"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content" >
 
-    <com.nail.news.widget.NewsPicItemGallery
-        android:id="@+id/item_picture_gallery"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/news_item_pictures_height"
-        android:fadingEdge="none"
-        android:soundEffectsEnabled="false"
-        android:unselectedAlpha="1" />
+        android:layout_height="@dimen/news_item_pictures_height" >
 
-    <TextView
-        android:id="@+id/item_picture_title"
-        style="@style/item_picture_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:singleLine="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp" />
+        <com.nail.news.widget.NewsPicItemGallery
+            android:id="@+id/item_picture_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/news_item_pictures_height"
+            android:fadingEdge="none"
+            android:soundEffectsEnabled="false"
+            android:unselectedAlpha="1" />
 
-    <TextView
-        android:id="@+id/item_picture_num"
-        style="@style/item_picture_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:singleLine="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/item_picture_title"
+            style="@style/item_picture_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="40dp"
+            android:singleLine="true" />
+
+        <com.nail.news.widget.PictureIndicator
+            android:id="@+id/item_picture_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="10dp" />
+    </RelativeLayout>
+
+</FrameLayout>

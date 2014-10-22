@@ -10,13 +10,22 @@ import android.widget.Gallery;
 public class NewsPicItemGallery extends Gallery{
 
     private int mStartX, mStartY;
+    private ViewGroup mParentView;
 
     public NewsPicItemGallery(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    public void setParentView(ViewGroup parent) {
+        mParentView = parent;
+    }
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (mParentView != null) {
+            mParentView.requestDisallowInterceptTouchEvent(true);
+        }
+
         int action = ev.getAction();
         switch (action) {
         case MotionEvent.ACTION_DOWN:

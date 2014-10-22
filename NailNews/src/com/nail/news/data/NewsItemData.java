@@ -27,7 +27,14 @@ public class NewsItemData implements IBaseContent {
     private ArrayList<Extension> extensions;
     private ArrayList<LinkData> links;
     private ArrayList<ImageData> img;
+    private ArrayList<SlideData> slides;
 
+    public final ArrayList<SlideData> getSlides() {
+        return slides;
+    }
+    public final void setSlides(ArrayList<SlideData> slides) {
+        this.slides = slides;
+    }
     public final ArrayList<ImageData> getImg() {
         return img;
     }
@@ -226,6 +233,30 @@ public class NewsItemData implements IBaseContent {
         }
         public final void setHeight(int height) {
             this.height = height;
+        }
+    }
+
+    public static class SlideData implements IBaseContent {
+        private String image;
+        private String title;
+        private String description;
+        public final String getImage() {
+            return image;
+        }
+        public final void setImage(String image) {
+            this.image = image;
+        }
+        public final String getTitle() {
+            return title;
+        }
+        public final void setTitle(String title) {
+            this.title = title;
+        }
+        public final String getDescription() {
+            return description;
+        }
+        public final void setDescription(String description) {
+            this.description = description;
         }
     }
 }

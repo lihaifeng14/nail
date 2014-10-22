@@ -92,7 +92,7 @@ public class NewsMainActivity extends FragmentActivity implements
     public void onFragmentCreatedView(BaseFragment fragment) {
         if (mNeedLoadPosition != -1) {
             if (mListFragments[mNeedLoadPosition] == fragment) {
-                mNeedLoadPosition = 0;
+                mNeedLoadPosition = -1;
                 PicNewsFragment picFragment = (PicNewsFragment)fragment;
                 picFragment.onFragmentShow();
             }
