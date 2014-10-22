@@ -4,5 +4,9 @@
     <string name="app_name">NailNews</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="detail_loading">加载中...</string>
+    <string name="main_title">我的新闻</string>
+    <string name="hotest_comments">最热跟帖</string>
+    <string name="newest_comments">最新跟帖</string>
+    <string name="expand_comments">展开隐藏楼层</string>
 </resources>

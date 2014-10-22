@@ -5,8 +5,8 @@ import com.nail.news.data.PageContent;
 public class NailNewsRequest {
 
     private static final String FORMAT_TAG_FIRST = "%1$s";
-    private static final String FORMAT_TAG_SECOND = "%1$s";
-    private static final String FORMAT_TAG_THIRD = "%1$s";
+    private static final String FORMAT_TAG_SECOND = "%2$s";
+    private static final String FORMAT_TAG_THIRD = "%3$s";
 
     public static final String IFENG_SPLASH_URL = "http://api.iapps.ifeng.com/news/cover_new.json?";
 
@@ -40,6 +40,10 @@ public class NailNewsRequest {
         return mInstance;
     }
 
+    public String getSplashUrl() {
+        return IFENG_SPLASH_URL;
+    }
+
     public String getDetailUrl(String documentId) {
         return String.format(NailNewsRequest.IFENG_NEWS_DETAIL_URL, documentId);
     }
@@ -62,5 +66,10 @@ public class NailNewsRequest {
             return String.format(NailNewsRequest.IFENG_NEWS_URL_ZMT, page);
         }
         return null;
+    }
+
+    private static final int COMMENTS_PAGE_SIZE = 20;
+    public String getCommentsUrl(String url, int page) {
+        return String.format(IFENG_NEWS_COMMENTS_URL, COMMENTS_PAGE_SIZE, page, url);
     }
 }

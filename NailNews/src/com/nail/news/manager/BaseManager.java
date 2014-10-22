@@ -17,8 +17,6 @@ import com.nail.news.NailNewsRequest;
 
 public abstract class BaseManager implements IHttpResult {
 
-    protected static final int FIRST_FLAG = 0x80000000;
-
     protected AsyncHttpHandler mHttpHandler;
     protected Handler mHandler;
     protected static NailNewsRequest mUrlManager;
@@ -26,12 +24,14 @@ public abstract class BaseManager implements IHttpResult {
     protected CacheManager mCacheManager;
 
     protected Map<Integer, Object> mMapRequest;
+    protected Map<Integer, Object> mMapRequestTag;
 
     protected void init(Context context) {
 
         mHttpHandler = NailNewsApplication.getInstance().getHttpHandler();
         mHandler = new Handler(context.getMainLooper());
         mMapRequest = new HashMap<Integer, Object>();
+        mMapRequestTag = new HashMap<Integer, Object>();
         mCacheManager = CacheManager.getInstance();
         mUrlManager = NailNewsRequest.getInstance();
 
@@ -39,10 +39,12 @@ public abstract class BaseManager implements IHttpResult {
 
     public void onMainRequestSuccess(int id, IBaseContent content) {
         mMapRequest.remove(id);
+        mMapRequestTag.remove(id);
     }
 
     public void onMainRequestFailed(int id, HttpException e) {
         mMapRequest.remove(id);
+        mMapRequestTag.remove(id);
     }
 
     @Override

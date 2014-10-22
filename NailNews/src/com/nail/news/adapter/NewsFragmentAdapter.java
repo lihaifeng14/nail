@@ -3,7 +3,6 @@ package com.nail.news.adapter;
 import com.nail.core.imageloader.ImageLoader;
 import com.nail.news.R;
 import com.nail.news.activity.NewsDetailActivity;
-import com.nail.news.activity.NewsMainActivity;
 import com.nail.news.data.NewsItemData;
 import com.nail.news.data.PageContent;
 import com.nail.news.widget.NewsPicItemGallery;
@@ -13,7 +12,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.AdapterView;
@@ -141,6 +139,7 @@ public class NewsFragmentAdapter extends BaseAdapter implements View.OnClickList
         NewsItemData data = mContent.mNewsData.get(holder.position);
         Intent intent = new Intent(mContext, NewsDetailActivity.class);
         intent.putExtra(NewsDetailActivity.EXTRA_DOCUMENT_ID, data.getDocumentId());
+        intent.putExtra(NewsDetailActivity.EXTRA_COMMENTS_COUNT, data.getComments());
         mContext.startActivity(intent);
     }
 

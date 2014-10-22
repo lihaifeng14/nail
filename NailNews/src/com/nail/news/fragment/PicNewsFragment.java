@@ -97,8 +97,11 @@ public class PicNewsFragment extends BaseFragment implements PageContent.NewsDat
             mListView.setRefreshing(false);
         }
 
-        mAdapter.setContent(content);
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mAdapter.setContent(content);
+            mAdapter.notifyDataSetChanged();
+        }
+
     }
 
     @Override

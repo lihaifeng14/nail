@@ -2,8 +2,10 @@ package com.nail.news;
 
 import com.nail.core.http.AsyncHttpHandler;
 import com.nail.news.manager.CacheManager;
+import com.nail.news.manager.CommentsManager;
 import com.nail.news.manager.NewsDetailManager;
 import com.nail.news.manager.NewsFragmentManager;
+import com.nail.news.manager.SplashManager;
 
 import android.app.ActivityManager;
 import android.app.Application;
@@ -34,6 +36,8 @@ public class NailNewsApplication extends Application {
             CacheManager.getInstance().init(this);
             NewsFragmentManager.getInstance().init(this);
             NewsDetailManager.getInstance().init(this);
+            SplashManager.getInstance().init(this);
+            CommentsManager.getInstance().init(this);
         }
     }
 

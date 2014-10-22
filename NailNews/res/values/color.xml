@@ -1,5 +1,7 @@
 <resources>
-    <color name="title_background">#ff3131cc</color>
+
+    <color name="main_title_background">#ff3131cc</color>
+    <color name="main_title_text">#fffbe5e5</color>
     <color name="item_select_background">#fff1f1f1</color>
     <color name="activity_background">#fff5f5f5</color>
     <color name="item_divider">#ffdddddd</color>
@@ -7,5 +9,17 @@
     <color name="item_title_disabled">#ff888888</color>
     <color name="item_secondary">#ff999999</color>
     <color name="item_picture_title">#ffeeeeee</color>
+    <color name="splash_background">#e8eae6</color>
+    <color name="title_comments_text">#fffbe5e5</color>
+    <color name="title_comments_background">#ffeb413D</color>
+    <color name="title_background_normal">#fffafafa</color>
+    <color name="title_background_select">#ffe5e5e5</color>
+    <color name="title_divider">#ffe3e3e3</color>
+    <color name="detail_loading_color">#ffa1a1a1</color>
+    <color name="item_comments_user">#ff54a4eb</color>
+    <color name="item_comments_from">#ffa1a1a1</color>
+    <color name="item_comments_expand">#ff888888</color>
+    <color name="comments_floor_line">#ffeaead6</color>
+    <color name="comments_floor_background">#fff8f8f1</color>
 
 </resources>

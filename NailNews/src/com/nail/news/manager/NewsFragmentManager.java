@@ -56,8 +56,8 @@ public class NewsFragmentManager extends BaseManager implements CacheListener {
             try {
                 AsyncHttpRequest request = mHttpHandler.creatGetRequest(
                       new URI(url), PicNewsData.class, this);
-                int value = FIRST_FLAG | type;
-                mMapRequest.put(request.getRequestId(), value);
+                mMapRequest.put(request.getRequestId(), type);
+                mMapRequestTag.put(request.getRequestId(), true);
                 request.setSaveJsonFile(mCacheManager.getCaheFile(url));
                 request.setAdjustContent();
                 mHttpHandler.sendRequest(request);
@@ -75,6 +75,7 @@ public class NewsFragmentManager extends BaseManager implements CacheListener {
                 AsyncHttpRequest request = mHttpHandler.creatGetRequest(
                       new URI(url), PicNewsData.class, this);
                 mMapRequest.put(request.getRequestId(), type);
+                mMapRequestTag.put(request.getRequestId(), false);
                 request.setAdjustContent();
                 mHttpHandler.sendRequest(request);
             } catch (URISyntaxException e) {
@@ -85,14 +86,13 @@ public class NewsFragmentManager extends BaseManager implements CacheListener {
 
     @Override
     public void onMainRequestSuccess(int id, IBaseContent content) {
-        Integer value = (Integer)mMapRequest.get(id);
+        Integer type = (Integer)mMapRequest.get(id);
+        Boolean isFirst = (Boolean)mMapRequestTag.get(id);
         super.onMainRequestSuccess(id, content);
-        if (value == null) {
+        if (type == null || isFirst == null) {
             return;
         }
 
-        boolean isFirst = (value & FIRST_FLAG) == FIRST_FLAG;
-        int type = ~FIRST_FLAG & value;
         PageContent page = mPageManager.getPageByType(type);
         if (isFirst) {
             page.setFirstData(content, true);
@@ -109,13 +109,13 @@ public class NewsFragmentManager extends BaseManager implements CacheListener {
 
     @Override
     public void onMainRequestFailed(int id, HttpException e) {
-        Integer value = (Integer)mMapRequest.get(id);
+        Integer type = (Integer)mMapRequest.get(id);
+        Boolean isFirst = (Boolean)mMapRequestTag.get(id);
         super.onMainRequestFailed(id, e);
-        if (value == null) {
+        if (type == null || isFirst == null) {
             return;
         }
 
-        int type = ~FIRST_FLAG & value;
         PageContent page = mPageManager.getPageByType(type);
         page.notifyFailed();
     }

@@ -4,12 +4,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.nail.news.widget.NewsHeaderTitle
+    <RelativeLayout
         android:id="@+id/news_main_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/news_titlebar_height" />
+        android:layout_height="@dimen/news_titlebar_height"
+        android:background="@color/main_title_background" >
 
-    <com.nail.core.widget.pageindicator.TabPageIndicator 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:text="@string/main_title"
+            android:textColor="@color/main_title_text"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <com.nail.core.widget.pageindicator.TabPageIndicator
         android:id="@+id/news_main_tabindicator"
         android:layout_width="match_parent"
         android:layout_height="@dimen/news_titlebar_height" />
