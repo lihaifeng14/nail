@@ -95,8 +95,12 @@ public class NewsFragmentManager extends BaseManager implements CacheListener {
 
         PageContent page = mPageManager.getPageByType(type);
         if (isFirst) {
-            page.setFirstData(content, true);
-            page.notifyNewData();
+            boolean ret = page.setFirstData(content, true);
+            if (ret) {
+            	page.notifyNewData();
+            } else {
+            	page.notifyNoNewData();
+            }
         } else {
             boolean ret = page.addData(content);
             if (ret) {
@@ -130,7 +134,7 @@ public class NewsFragmentManager extends BaseManager implements CacheListener {
         Log.d("lihaifeng", "Cache Load Success " + tag);
         int type = Integer.valueOf(tag);
         PageContent page = mPageManager.getPageByType(type);
-        page.setFirstData(content, false);
+        boolean ret = page.setFirstData(content, false);
         page.notifyNewData();
     }
 

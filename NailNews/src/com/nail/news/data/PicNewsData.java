@@ -1,4 +1,5 @@
 package com.nail.news.data;
+
 import java.util.ArrayList;
 
 import com.nail.core.http.IBaseContent;

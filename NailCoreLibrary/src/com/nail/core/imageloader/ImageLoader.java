@@ -204,6 +204,12 @@ public class ImageLoader {
     }
 
     public void displayImage(String url, ImageView imageView, int defaultResId, BitmapLoadCallback callback) {
+        String tag = (String)imageView.getTag();
+        if (tag != null && url.compareTo(tag) == 0) {
+            return;
+        } else {
+            imageView.setTag(url);
+        }
         if (defaultResId > 0) {
             imageView.setImageResource(defaultResId);
         }

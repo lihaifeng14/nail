@@ -149,4 +149,18 @@ public class PicNewsFragment extends BaseFragment implements PageContent.NewsDat
             mListView.onLoadComplete();
         }
     }
+
+	@Override
+	public void onNoNewData(int type) {
+        if (mType != type) {
+            return;
+        }
+
+        if (mIsPulltoRefresh && mListView != null) {
+            mListView.onRefreshComplete();
+        }
+        if (mIsAutoRefresh && mListView != null) {
+            mListView.setRefreshing(false);
+        }
+	}
 }
