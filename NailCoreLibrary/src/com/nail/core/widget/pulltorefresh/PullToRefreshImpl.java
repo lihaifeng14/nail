@@ -40,6 +40,7 @@ public class PullToRefreshImpl {
 
     private PullToRefreshHeader mPullRefreshLayout;
     private PullToRefreshHeader mRefreshingLayout;
+    private View mRefreshSubView;
     private ViewGroup mParentView;
 
     private int mOldState;
@@ -74,6 +75,9 @@ public class PullToRefreshImpl {
 
         mRefreshingLayout = (PullToRefreshHeader)inflater.inflate(R.layout.pulltorefresh_header, null);
         mRefreshingLayout.switchState(STATE_PULL_REFRESHING);
+        mPullBehaviorListener.addPullHeaderView(mRefreshingLayout);
+        mRefreshSubView = mRefreshingLayout.findViewById(R.id.layout_header);
+        mRefreshSubView.setVisibility(View.GONE);
 
         mParentView.addView(mPullRefreshLayout, 0);
         mParentView.setPadding(0, -mHeaderHeight, 0, 0);
@@ -239,7 +243,8 @@ public class PullToRefreshImpl {
         switch(mState) {
         case STATE_INIT:
             mPullRefreshLayout.setVisibility(View.VISIBLE);
-            mPullBehaviorListener.removePullHeaderView(mRefreshingLayout);
+//            mPullBehaviorListener.removePullHeaderView(mRefreshingLayout);
+            mRefreshSubView.setVisibility(View.GONE);
             smoothScrollHeader(0);
             break;
         case STATE_PULL_TO_REFRESH:
@@ -250,7 +255,8 @@ public class PullToRefreshImpl {
         case STATE_MANUAL_REFRESHING:
             mPullRefreshLayout.setVisibility(View.INVISIBLE);
             scrollHeader(mParentView.getScrollY()+mHeaderHeight);
-            mPullBehaviorListener.addPullHeaderView(mRefreshingLayout);
+//            mPullBehaviorListener.addPullHeaderView(mRefreshingLayout);
+            mRefreshSubView.setVisibility(View.VISIBLE);
             smoothScrollHeader(0);
             break;
         }

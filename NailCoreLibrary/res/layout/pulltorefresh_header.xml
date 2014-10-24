@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.nail.core.widget.pulltorefresh.PullToRefreshHeader xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:minHeight="@dimen/pulltorefresh_header_height" >
-    <FrameLayout
-        android:id="@+id/pulltorefresh_header_frame"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:layout_width="20dp"
-        android:layout_height="20dp">
-        <ImageView
-            android:id="@+id/pulltofresh_header_image"
-            android:scaleType="centerInside"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pulltorefresh_header_height" >
+
+        <FrameLayout
+            android:id="@+id/pulltorefresh_header_frame"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp" >
+
+            <ImageView
+                android:id="@+id/pulltofresh_header_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside" />
+
+            <ProgressBar
+                android:id="@+id/pulltofresh_header_progess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+"
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/pulltofresh_header_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ProgressBar
-            android:id="@+id/pulltofresh_header_progess"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />"
-    </FrameLayout>
-    <TextView
-        android:id="@+id/pulltofresh_header_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="15dp"/>
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="15dp" />
+    </RelativeLayout>
+
 </com.nail.core.widget.pulltorefresh.PullToRefreshHeader>

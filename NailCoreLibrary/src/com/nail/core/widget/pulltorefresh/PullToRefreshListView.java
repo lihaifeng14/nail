@@ -19,6 +19,7 @@ public class PullToRefreshListView extends ListView implements IPullToRefresh, I
     private PullToRefreshImpl mPullToRefreshImpl;
     private ListAdapter mAdapter;
     private View mPullToLoadFooter;
+    private View mPullToLoadSubView;
 
     private OnScrollListener mScrollListener;
     private LoadListener mLoadListener;
@@ -45,7 +46,8 @@ public class PullToRefreshListView extends ListView implements IPullToRefresh, I
 
         mPullToLoadFooter = LayoutInflater.from(context).inflate(R.layout.pulltoload_footer, null);
         addFooterView(mPullToLoadFooter);
-        mPullToLoadFooter.setVisibility(View.INVISIBLE);
+        mPullToLoadSubView = mPullToLoadFooter.findViewById(R.id.layout_footer);
+        mPullToLoadSubView.setVisibility(View.GONE);
         super.setOnScrollListener(this);
     }
 
@@ -79,7 +81,7 @@ public class PullToRefreshListView extends ListView implements IPullToRefresh, I
 
     @Override
     public void onLoadComplete() {
-        removeFooterView(mPullToLoadFooter);
+        mPullToLoadSubView.setVisibility(View.GONE);
     }
 
     // 实现PullBehaviorListener的接口
@@ -156,7 +158,7 @@ public class PullToRefreshListView extends ListView implements IPullToRefresh, I
             int visibleItemCount, int totalItemCount) {
         mLastVisibleItem = firstVisibleItem + visibleItemCount - 1;
         if (mLastVisibleItem >= visibleItemCount) {
-            mPullToLoadFooter.setVisibility(View.VISIBLE);
+        	mPullToLoadSubView.setVisibility(View.VISIBLE);
         }
         if (mScrollListener != null) {
             mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
